@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - TeleMed{% endblock %}
+
+{% block content %}
+<section
+    style="padding-top: 120px; min-height: 100vh; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%);">
+    <div class="container">
+        <div class="section-header" style="margin-bottom: 3rem;">
+            <p class="section-subtitle">Get in Touch</p>
+            <h1 class="section-title">Contact Us</h1>
+            <p class="section-description">
+                Have questions or need assistance? We're here to help you with your healthcare needs.
+            </p>
+        </div>
+
+        <div class="grid grid-2" style="gap: 3rem;">
+            <!-- Contact Form -->
+            <div class="card animate-fade-in" style="padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem;">Send us a Message</h3>
+
+                <form method="post" action="{% url 'contact' %}">
+                    {% csrf_token %}
+
+                    <div class="grid grid-2" style="gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Your Name *</label>
+                            <input type="text" name="name" id="name" class="form-input" placeholder="Full name"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address *</label>
+                            <input type="email" name="email" id="email" class="form-input" placeholder="your@email.com"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="subject">Subject *</label>
+                        <input type="text" name="subject" id="subject" class="form-input" placeholder="How can we help?"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="message">Message *</label>
+                        <textarea name="message" id="message" class="form-input" rows="5"
+                            placeholder="Write your message here..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-full">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Contact Info -->
+            <div>
+                <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div
+                            style="width: 60px; height: 60px; background: var(--primary-50); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-size: 1.5rem;">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin: 0;">Phone Support</h5>
+                            <p class="text-muted" style="margin: 0;">+91 1800-XXX-XXXX (Toll Free)</p>
+                            <p class="text-muted" style="margin: 0; font-size: 0.875rem;">Mon-Sat: 9AM - 6PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div
+                            style="width: 60px; height: 60px; background: var(--accent-50); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: var(--accent-600); font-size: 1.5rem;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin: 0;">Email Us</h5>
+                            <p class="text-muted" style="margin: 0;">support@telemed.com</p>
+                            <p class="text-muted" style="margin: 0; font-size: 0.875rem;">We reply within 24 hours</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 1.5rem; padding: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div
+                            style="width: 60px; height: 60px; background: rgba(245, 158, 11, 0.1); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.5rem;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin: 0;">Visit Us</h5>
+                            <p class="text-muted" style="margin: 0;">Healthcare Innovation Center</p>
+                            <p class="text-muted" style="margin: 0; font-size: 0.875rem;">New Delhi, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency -->
+                <div class="card"
+                    style="background: linear-gradient(135deg, #fef3f2 0%, #fee2e2 100%); border: 2px solid #fecaca; padding: 1.5rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div
+                            style="width: 60px; height: 60px; background: #ef4444; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                            <i class="fas fa-ambulance"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin: 0; color: #b91c1c;">Emergency?</h5>
+                            <p style="margin: 0; color: #7f1d1d;">Call <strong>108</strong> for Ambulance</p>
+                            <p style="margin: 0; font-size: 0.875rem; color: #991b1b;">Or <strong>112</strong> for
+                                Emergency Services</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div style="margin-top: 2rem; text-align: center;">
+                    <p class="text-muted" style="margin-bottom: 1rem;">Follow us on social media</p>
+                    <div style="display: flex; justify-content: center; gap: 1rem;">
+                        <a href="#" class="btn btn-icon btn-outline"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-icon btn-outline"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-icon btn-outline"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="btn btn-icon btn-outline"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="btn btn-icon btn-outline"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

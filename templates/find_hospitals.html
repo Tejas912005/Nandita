@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Find Hospitals - TeleMed{% endblock %}
+
+{% block extra_css %}
+<style>
+    #map {
+        width: 100%;
+        height: 500px;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <!-- Header -->
+        <div class="section-header" style="margin-bottom: 2rem;">
+            <p class="section-subtitle">Location Services</p>
+            <h2 class="section-title">Find Nearby Hospitals</h2>
+            <p class="section-description">
+                Locate hospitals and clinics near you. View real-time bed availability and get directions.
+            </p>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <div style="flex: 1; min-width: 250px;">
+                    <input type="text" id="search-hospital" class="form-input"
+                        placeholder="Search hospitals by name...">
+                </div>
+                <button class="btn btn-primary" onclick="locateMe()">
+                    <i class="fas fa-location-crosshairs"></i> Use My Location
+                </button>
+                <a href="{% url 'bed_availability' %}" class="btn btn-secondary">
+                    <i class="fas fa-bed"></i> Check Bed Availability
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-2" style="gap: 2rem;">
+            <!-- Map -->
+            <div>
+                <div id="map">
+                    <!-- Map will be loaded here -->
+                    <div
+                        style="width: 100%; height: 100%; background: linear-gradient(135deg, var(--primary-100) 0%, var(--accent-100) 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; border-radius: var(--radius-xl);">
+                        <i class="fas fa-map-marked-alt"
+                            style="font-size: 4rem; color: var(--primary-600); margin-bottom: 1rem;"></i>
+                        <p style="color: var(--neutral-600);">Map loading...</p>
+                        <p class="text-muted" style="font-size: 0.875rem;">Add Google Maps API key to enable</p>
+                    </div>
+                </div>
+
+                <div class="alert alert-info" style="margin-top: 1rem;">
+                    <i class="fas fa-info-circle"></i>
+                    <span>To enable the interactive map, add your Google Maps API key in settings.</span>
+                </div>
+            </div>
+
+            <!-- Hospital List -->
+            <div>
+                <h4 style="margin-bottom: 1rem;">
+                    <i class="fas fa-hospital text-primary"></i>
+                    Available Hospitals ({{ hospitals|length }})
+                </h4>
+
+                <div class="hospital-list" style="max-height: 550px; overflow-y: auto;">
+                    {% for hospital in hospitals %}
+                    <div class="hospital-card card" style="margin-bottom: 1rem;">
+                        <div style="display: flex; gap: 1rem;">
+                            <div
+                                style="width: 80px; height: 80px; background: var(--primary-50); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="fas fa-hospital" style="font-size: 2rem; color: var(--primary-600);"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <h5 class="hospital-card-name">{{ hospital.name }}</h5>
+                                <p class="hospital-card-address">
+                                    <i class="fas fa-map-marker-alt"></i> {{ hospital.address }}
+                                </p>
+                                <div class="hospital-card-stats">
+                                    <span class="hospital-card-stat available">
+                                        <i class="fas fa-bed"></i> {{ hospital.available_beds_count }} beds available
+                                    </span>
+                                    <span class="hospital-card-stat">
+                                        <i class="fas fa-phone"></i> {{ hospital.phone }}
+                                    </span>
+                                </div>
+                                <div style="margin-top: 0.75rem;">
+                                    <a href="{% url 'hospital_detail' hospital.id %}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                    <a href="https://www.google.com/maps/dir/?api=1&destination={{ hospital.latitude }},{{ hospital.longitude }}"
+                                        target="_blank" class="btn btn-sm btn-secondary">
+                                        <i class="fas fa-directions"></i> Get Directions
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="card" style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-hospital-slash"
+                            style="font-size: 3rem; color: var(--neutral-300); margin-bottom: 1rem;"></i>
+                        <h4 class="text-muted">No Hospitals Found</h4>
+                        <p class="text-muted">No hospitals are currently available in the system.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Banner -->
+        <div class="card"
+            style="margin-top: 2rem; background: linear-gradient(135deg, #fef3f2 0%, #fee2e2 100%); border: 2px solid #fecaca;">
+            <div
+                style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div
+                        style="width: 60px; height: 60px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-ambulance"></i>
+                    </div>
+                    <div>
+                        <h4 style="color: #b91c1c; margin: 0;">Emergency Services</h4>
+                        <p style="color: #7f1d1d; margin: 0;">For medical emergencies, call immediately</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="tel:108" class="btn btn-lg" style="background: #ef4444; color: white;">
+                        <i class="fas fa-phone"></i> 108 - Ambulance
+                    </a>
+                    <a href="tel:112" class="btn btn-lg" style="background: #b91c1c; color: white;">
+                        <i class="fas fa-phone"></i> 112 - Emergency
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Hospital data for map
+    const hospitals = {{ hospitals_json| safe }};
+
+    // Search functionality
+    document.getElementById('search-hospital').addEventListener('input', function (e) {
+        const query = e.target.value.toLowerCase();
+        document.querySelectorAll('.hospital-card').forEach(card => {
+            const name = card.querySelector('.hospital-card-name').textContent.toLowerCase();
+            const address = card.querySelector('.hospital-card-address').textContent.toLowerCase();
+            if (name.includes(query) || address.includes(query)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+
+    // Locate user
+    function locateMe() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    alert(`Your location: ${userLat.toFixed(4)}, ${userLng.toFixed(4)}\n\nNearest hospital will be highlighted on the map when Google Maps API is configured.`);
+                },
+                (error) => {
+                    alert('Unable to get your location. Please enable location services.');
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by your browser.');
+        }
+    }
+</script>
+{% endblock %}
+{% endblock %}

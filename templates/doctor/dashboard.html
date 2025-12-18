@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Doctor Dashboard - TeleMed{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div style="margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div
+                    style="width: 60px; height: 60px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0;">Dr. {{ doctor.full_name }}</h4>
+                    <span class="text-muted">{{ doctor.get_specialization_display }}</span>
+                </div>
+            </div>
+            {% if not doctor.is_verified %}
+            <div class="alert alert-warning" style="padding: 0.5rem; font-size: 0.875rem;">
+                <i class="fas fa-clock"></i> Pending verification
+            </div>
+            {% endif %}
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="{% url 'doctor_dashboard' %}" class="sidebar-link active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'doctor_appointments' %}" class="sidebar-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Appointments</span>
+                    {% if pending_appointments %}
+                    <span class="badge badge-pending" style="margin-left: auto;">{{ pending_appointments }}</span>
+                    {% endif %}
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'doctor_patients' %}" class="sidebar-link">
+                    <i class="fas fa-users"></i>
+                    <span>My Patients</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'doctor_profile' %}" class="sidebar-link">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Profile Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item" style="margin-top: 2rem;">
+                <a href="{% url 'logout' %}" class="sidebar-link" style="color: var(--error);">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div>
+                <h2 class="dashboard-title">Welcome, Dr. {{ doctor.full_name }}!</h2>
+                <p class="text-muted">Here's your practice overview</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <label class="checkbox-group"
+                    style="padding: 0.5rem 1rem; background: white; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <input type="checkbox" {% if doctor.is_available %}checked{% endif %}
+                        onchange="toggleAvailability(this)">
+                    <span>Available for consultations</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stat-cards">
+            <div class="card stat-card">
+                <div class="stat-card-icon primary">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="stat-card-value">{{ todays_appointments|length }}</div>
+                <div class="stat-card-label">Today's Appointments</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-card-icon warning">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-card-value">{{ pending_appointments }}</div>
+                <div class="stat-card-label">Pending Requests</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-card-icon accent">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-card-value">{{ total_patients }}</div>
+                <div class="stat-card-label">Total Patients</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-card-icon info">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div class="stat-card-value">₹{{ doctor.consultation_fee }}</div>
+                <div class="stat-card-label">Consultation Fee</div>
+            </div>
+        </div>
+
+        <!-- Today's Schedule -->
+        <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+                <h4 class="card-title"><i class="fas fa-calendar-day text-primary"></i> Today's Schedule</h4>
+                <a href="{% url 'doctor_appointments' %}" class="btn btn-ghost btn-sm">View All</a>
+            </div>
+            <div class="card-body">
+                {% if todays_appointments %}
+                <div class="table-container" style="box-shadow: none;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Patient</th>
+                                <th>Type</th>
+                                <th>Symptoms</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appointment in todays_appointments %}
+                            <tr>
+                                <td><strong>{{ appointment.scheduled_time }}</strong></td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        <div
+                                            style="width: 40px; height: 40px; background: var(--primary-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-600);">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 500;">{{ appointment.patient.full_name }}</div>
+                                            <div class="text-muted" style="font-size: 0.75rem;">{{
+                                                appointment.booking_id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                                        <i
+                                            class="fas fa-{% if appointment.appointment_type == 'video' %}video{% elif appointment.appointment_type == 'chat' %}comments{% else %}hospital{% endif %}"></i>
+                                        {{ appointment.get_appointment_type_display }}
+                                    </span>
+                                </td>
+                                <td style="max-width: 200px;">{{ appointment.symptoms|truncatewords:10 }}</td>
+                                <td><span class="badge badge-{{ appointment.status }}">{{ appointment.status }}</span>
+                                </td>
+                                <td>
+                                    {% if appointment.status == 'pending' %}
+                                    <form method="post" action="{% url 'update_appointment_status' appointment.id %}"
+                                        style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="status" value="confirmed">
+                                        <button type="submit" class="btn btn-sm btn-accent">
+                                            <i class="fas fa-check"></i> Confirm
+                                        </button>
+                                    </form>
+                                    {% elif appointment.status == 'confirmed' %}
+                                    <a href="{% url 'doctor_consultation' appointment.id %}"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fas fa-video"></i> Start
+                                    </a>
+                                    {% elif appointment.status == 'in_progress' %}
+                                    <a href="{% url 'doctor_consultation' appointment.id %}"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fas fa-video"></i> Continue
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div style="text-align: center; padding: 3rem; color: var(--neutral-400);">
+                    <i class="fas fa-calendar-check" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>No appointments scheduled for today</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title"><i class="fas fa-bell text-warning"></i> Notifications</h4>
+            </div>
+            <div class="card-body">
+                {% if notifications %}
+                {% for notification in notifications %}
+                <div style="display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--neutral-100);">
+                    <div
+                        style="width: 40px; height: 40px; background: var(--primary-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-600); flex-shrink: 0;">
+                        <i
+                            class="fas fa-{% if notification.notification_type == 'appointment' %}calendar{% else %}bell{% endif %}"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 500;">{{ notification.title }}</div>
+                        <div class="text-muted" style="font-size: 0.875rem;">{{ notification.message|truncatewords:15 }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div style="text-align: center; padding: 2rem; color: var(--neutral-400);">
+                    <i class="fas fa-bell-slash" style="font-size: 2rem;"></i>
+                    <p style="margin-top: 0.5rem;">No new notifications</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleAvailability(checkbox) {
+        // In a real app, this would make an API call to update availability
+        const isAvailable = checkbox.checked;
+        console.log('Availability:', isAvailable);
+    }
+</script>
+{% endblock %}

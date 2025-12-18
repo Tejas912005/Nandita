@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - TeleMed{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section
+    style="padding-top: 120px; padding-bottom: 80px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%);">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <p class="section-subtitle">About TeleMed</p>
+            <h1>Bringing Healthcare to <span class="text-primary">Rural Communities</span></h1>
+            <p style="font-size: 1.25rem; color: var(--neutral-600); margin-top: 1.5rem;">
+                TeleMed is a telemedicine platform dedicated to bridging the healthcare gap
+                in rural areas by providing accessible, affordable, and quality medical services
+                through technology.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Mission & Vision -->
+<section class="section">
+    <div class="container">
+        <div class="grid grid-2" style="gap: 3rem; align-items: center;">
+            <div>
+                <div
+                    style="width: 100%; height: 400px; background: var(--gradient-primary); border-radius: var(--radius-2xl); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-heartbeat" style="font-size: 8rem; color: rgba(255,255,255,0.3);"></i>
+                </div>
+            </div>
+            <div>
+                <h2 class="mb-3">Our Mission</h2>
+                <p style="font-size: 1.125rem; color: var(--neutral-600); margin-bottom: 2rem;">
+                    To democratize healthcare access by leveraging technology, ensuring that
+                    geographical barriers no longer prevent anyone from receiving quality medical care.
+                </p>
+
+                <h2 class="mb-3">Our Vision</h2>
+                <p style="font-size: 1.125rem; color: var(--neutral-600);">
+                    A world where every person, regardless of their location, has equal access
+                    to healthcare services, preventive care, and medical expertise.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-subtitle">Why Choose Us</p>
+            <h2 class="section-title">The TeleMed Advantage</h2>
+        </div>
+
+        <div class="grid grid-3">
+            <div class="card" style="text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--primary-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-size: 2rem;">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h4>Verified Doctors</h4>
+                <p class="text-muted">All doctors on our platform are verified with valid medical licenses and
+                    credentials.</p>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: var(--accent-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent-600); font-size: 2rem;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Secure & Private</h4>
+                <p class="text-muted">Your health data is encrypted and stored securely. We prioritize your privacy.</p>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(245, 158, 11, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 2rem;">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h4>24/7 Availability</h4>
+                <p class="text-muted">Access healthcare anytime with our round-the-clock telemedicine services.</p>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(139, 92, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8b5cf6; font-size: 2rem;">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <h4>Affordable Care</h4>
+                <p class="text-muted">Quality healthcare at affordable prices, eliminating travel and opportunity costs.
+                </p>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(236, 72, 153, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ec4899; font-size: 2rem;">
+                    <i class="fas fa-language"></i>
+                </div>
+                <h4>Local Language</h4>
+                <p class="text-muted">Communicate with doctors in your preferred language for better understanding.</p>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #10b981; font-size: 2rem;">
+                    <i class="fas fa-qrcode"></i>
+                </div>
+                <h4>Digital Records</h4>
+                <p class="text-muted">Access and share your medical records instantly with QR code technology.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section style="background: var(--gradient-primary); padding: 4rem 0;">
+    <div class="container" style="text-align: center; color: white;">
+        <h2 style="color: white; margin-bottom: 1rem;">Ready to Experience Better Healthcare?</h2>
+        <p style="opacity: 0.9; max-width: 600px; margin: 0 auto 2rem;">
+            Join thousands of patients who have already experienced the convenience of telemedicine.
+        </p>
+        <a href="{% url 'register' %}" class="btn btn-lg" style="background: white; color: var(--primary-600);">
+            <i class="fas fa-user-plus"></i> Get Started Today
+        </a>
+    </div>
+</section>
+{% endblock %}

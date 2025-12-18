@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}TeleMed - Telemedicine Access for Rural Healthcare{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="grid grid-2" style="align-items: center; gap: 4rem;">
+            <div class="hero-content animate-fade-in">
+                <div class="hero-badge">
+                    <i class="fas fa-star"></i>
+                    <span>#1 Rural Healthcare Platform</span>
+                </div>
+
+                <h1 class="hero-title">Healthcare at Your Fingertips</h1>
+
+                <p class="hero-subtitle">
+                    Connect with qualified doctors from anywhere. Book video consultations,
+                    chat with specialists, and access quality healthcare without traveling
+                    long distances. Your health, our priority.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus"></i> Get Started Free
+                    </a>
+                    <a href="{% url 'find_hospitals' %}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-map-marker-alt"></i> Find Hospitals
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">{{ stats.doctors }}+</div>
+                        <div class="hero-stat-label">Verified Doctors</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">{{ stats.patients }}+</div>
+                        <div class="hero-stat-label">Happy Patients</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">{{ stats.hospitals }}+</div>
+                        <div class="hero-stat-label">Partner Hospitals</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">{{ stats.appointments }}+</div>
+                        <div class="hero-stat-label">Consultations</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image" style="position: relative;">
+                <!-- Floating Cards -->
+                <div class="floating-card" style="top: 10%; right: 0;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div
+                            style="width: 48px; height: 48px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Video Consultation</div>
+                            <div style="color: #64748b; font-size: 0.875rem;">Available 24/7</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="floating-card" style="top: 40%; right: 15%;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div
+                            style="width: 48px; height: 48px; background: #0967d2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">{{ stats.hospitals }} Hospitals</div>
+                            <div style="color: #64748b; font-size: 0.875rem;">Near You</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="floating-card" style="bottom: 15%; right: 5%;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div
+                            style="width: 48px; height: 48px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-ambulance"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">Mobile Clinics</div>
+                            <div style="color: #64748b; font-size: 0.875rem;">Coming to your village</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Image Placeholder -->
+                <div
+                    style="width: 100%; height: 500px; background: linear-gradient(135deg, #0967d2 0%, #10a85a 100%); border-radius: 2rem; display: flex; align-items: center; justify-content: center;">
+                    <div style="text-align: center; color: white;">
+                        <i class="fas fa-user-md" style="font-size: 8rem; opacity: 0.5;"></i>
+                        <p style="margin-top: 1rem; font-size: 1.25rem;">Your Health, Our Mission</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features section">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-subtitle">Our Services</p>
+            <h2 class="section-title">Complete Healthcare Solutions</h2>
+            <p class="section-description">
+                From online consultations to mobile clinics, we provide comprehensive
+                healthcare services designed for rural communities.
+            </p>
+        </div>
+
+        <div class="grid grid-4">
+            <div class="feature-card card">
+                <div class="feature-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h4 class="feature-title">Video Consultation</h4>
+                <p class="feature-description">
+                    Connect face-to-face with doctors through secure video calls.
+                    Get diagnosed and treated from the comfort of your home.
+                </p>
+            </div>
+
+            <div class="feature-card card">
+                <div class="feature-icon" style="background: var(--accent-50); color: var(--accent-600);">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h4 class="feature-title">Chat with Doctors</h4>
+                <p class="feature-description">
+                    Can't do video? No problem! Chat with doctors via text messages.
+                    Share symptoms and get instant medical advice.
+                </p>
+            </div>
+
+            <div class="feature-card card">
+                <div class="feature-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                    <i class="fas fa-ambulance"></i>
+                </div>
+                <h4 class="feature-title">Mobile Clinics</h4>
+                <p class="feature-description">
+                    Healthcare comes to you! Book appointments with mobile clinics
+                    visiting your village for in-person checkups.
+                </p>
+            </div>
+
+            <div class="feature-card card">
+                <div class="feature-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <h4 class="feature-title">Digital Records</h4>
+                <p class="feature-description">
+                    Access your medical records anytime with QR codes.
+                    Share with any hospital instantly for better treatment.
+                </p>
+            </div>
+
+            <div class="feature-card card">
+                <div class="feature-icon" style="background: rgba(236, 72, 153, 0.1); color: #ec4899;">
+                    <i class="fas fa-bed"></i>
+                </div>
+                <h4 class="feature-title">Bed Availability</h4>
+                <p class="feature-description">
+                    Check real-time bed availability across hospitals.
+                    Find the right facility during emergencies instantly.
+                </p>
+            </div>
+
+            <div class="feature-card card">
+                <div class="feature-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <h4 class="feature-title">Find Hospitals</h4>
+                <p class="feature-description">
+                    Locate nearby hospitals on the map. Get directions,
+                    contact info, and available services at a glance.
+                </p>
+            </div>
+
+            <div class="feature-card card">
+                <div class="feature-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h4 class="feature-title">AI Health Assistant</h4>
+                <p class="feature-description">
+                    Our C_Bot chatbot answers your health questions 24/7.
+                    Get preliminary guidance before consulting a doctor.
+                </p>
+            </div>
+
+            <div class="feature-card card">
+                <div class="feature-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                    <i class="fas fa-prescription"></i>
+                </div>
+                <h4 class="feature-title">E-Prescriptions</h4>
+                <p class="feature-description">
+                    Receive digital prescriptions with QR codes.
+                    Show at any pharmacy for easy medication pickup.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-subtitle">How It Works</p>
+            <h2 class="section-title">Get Healthcare in 4 Simple Steps</h2>
+        </div>
+
+        <div class="grid grid-4" style="text-align: center;">
+            <div>
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold;">
+                    1</div>
+                <h4>Register</h4>
+                <p class="text-muted">Create your account with basic details. It's free and takes only 2 minutes.</p>
+            </div>
+
+            <div>
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold;">
+                    2</div>
+                <h4>Find a Doctor</h4>
+                <p class="text-muted">Browse doctors by specialization. Check their profiles and availability.</p>
+            </div>
+
+            <div>
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold;">
+                    3</div>
+                <h4>Book Appointment</h4>
+                <p class="text-muted">Choose your preferred time slot and consultation type (video/chat).</p>
+            </div>
+
+            <div>
+                <div
+                    style="width: 80px; height: 80px; margin: 0 auto 1rem; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold;">
+                    4</div>
+                <h4>Get Treated</h4>
+                <p class="text-muted">Consult with the doctor and receive digital prescription instantly.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Doctors Section -->
+{% if doctors %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-subtitle">Our Doctors</p>
+            <h2 class="section-title">Meet Our Expert Physicians</h2>
+            <p class="section-description">
+                Verified and experienced doctors ready to help you with your health concerns.
+            </p>
+        </div>
+
+        <div class="grid grid-3">
+            {% for doctor in doctors %}
+            <div class="doctor-card card">
+                <div
+                    style="width: 100%; height: 200px; background: linear-gradient(135deg, var(--primary-100) 0%, var(--accent-100) 100%); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                    <i class="fas fa-user-md" style="font-size: 4rem; color: var(--primary-600);"></i>
+                </div>
+                <h4 class="doctor-name">Dr. {{ doctor.full_name }}</h4>
+                <p class="doctor-specialization">{{ doctor.get_specialization_display }}</p>
+                <div class="doctor-info">
+                    <span><i class="fas fa-briefcase"></i> {{ doctor.experience_years }} years exp.</span>
+                    <span class="text-primary">₹{{ doctor.consultation_fee }}</span>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-sm w-full">Book Consultation</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{% url 'register' %}" class="btn btn-secondary">View All Doctors</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section style="background: var(--gradient-primary); padding: 4rem 0;">
+    <div class="container">
+        <div style="text-align: center; color: white;">
+            <h2 style="color: white; margin-bottom: 1rem;">Ready to Experience Better Healthcare?</h2>
+            <p style="opacity: 0.9; max-width: 600px; margin: 0 auto 2rem;">
+                Join thousands of patients who have already experienced the convenience
+                of telemedicine. Register now and book your first consultation.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <a href="{% url 'register' %}" class="btn btn-lg" style="background: white; color: var(--primary-600);">
+                    <i class="fas fa-user-plus"></i> Register as Patient
+                </a>
+                <a href="{% url 'register_doctor' %}" class="btn btn-lg"
+                    style="background: transparent; color: white; border: 2px solid white;">
+                    <i class="fas fa-user-md"></i> Join as Doctor
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Emergency Banner -->
+<section style="background: #fef3f2; border-top: 4px solid #ef4444; padding: 1.5rem 0;">
+    <div class="container">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: #ef4444;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
+                <strong>Emergency?</strong>
+            </div>
+            <span style="color: #7f1d1d;">Call <strong>108</strong> for Ambulance or <strong>112</strong> for Emergency
+                Services</span>
+            <a href="{% url 'find_hospitals' %}" class="btn btn-sm" style="background: #ef4444; color: white;">
+                <i class="fas fa-hospital"></i> Find Nearest Hospital
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

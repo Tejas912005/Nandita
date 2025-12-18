@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patient Dashboard - TeleMed{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div style="margin-bottom: 2rem;">
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div
+                    style="width: 60px; height: 60px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0;">{{ patient.full_name }}</h4>
+                    <span class="text-muted">Patient</span>
+                </div>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="{% url 'patient_dashboard' %}" class="sidebar-link active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'book_appointment' %}" class="sidebar-link">
+                    <i class="fas fa-calendar-plus"></i>
+                    <span>Book Appointment</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'patient_appointments' %}" class="sidebar-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>My Appointments</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'patient_records' %}" class="sidebar-link">
+                    <i class="fas fa-file-medical"></i>
+                    <span>Medical Records</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'patient_prescriptions' %}" class="sidebar-link">
+                    <i class="fas fa-prescription"></i>
+                    <span>Prescriptions</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'find_hospitals' %}" class="sidebar-link">
+                    <i class="fas fa-hospital"></i>
+                    <span>Find Hospitals</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="{% url 'patient_profile' %}" class="sidebar-link">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Profile Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item" style="margin-top: 2rem;">
+                <a href="{% url 'logout' %}" class="sidebar-link" style="color: var(--error);">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <div class="dashboard-header">
+            <div>
+                <h2 class="dashboard-title">Welcome, {{ patient.full_name }}!</h2>
+                <p class="text-muted">Here's your health overview</p>
+            </div>
+            <a href="{% url 'book_appointment' %}" class="btn btn-primary">
+                <i class="fas fa-calendar-plus"></i> Book Appointment
+            </a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stat-cards">
+            <div class="card stat-card">
+                <div class="stat-card-icon primary">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-card-value">{{ upcoming_appointments|length }}</div>
+                <div class="stat-card-label">Upcoming Appointments</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-card-icon accent">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <div class="stat-card-value">{{ recent_records|length }}</div>
+                <div class="stat-card-label">Medical Records</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-card-icon warning">
+                    <i class="fas fa-prescription"></i>
+                </div>
+                <div class="stat-card-value">{{ recent_prescriptions|length }}</div>
+                <div class="stat-card-label">Prescriptions</div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-card-icon info">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="stat-card-value">{{ notifications|length }}</div>
+                <div class="stat-card-label">Notifications</div>
+            </div>
+        </div>
+
+        <div class="grid grid-2" style="gap: 1.5rem;">
+            <!-- Upcoming Appointments -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-calendar-alt text-primary"></i> Upcoming Appointments</h4>
+                    <a href="{% url 'patient_appointments' %}" class="btn btn-ghost btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if upcoming_appointments %}
+                    {% for appointment in upcoming_appointments %}
+                    <div
+                        style="display: flex; align-items: center; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid var(--neutral-100);">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div
+                                style="width: 50px; height: 50px; background: var(--primary-50); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--primary-600);">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">Dr. {{ appointment.doctor.full_name }}</div>
+                                <div class="text-muted" style="font-size: 0.875rem;">{{
+                                    appointment.doctor.get_specialization_display }}</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 500;">{{ appointment.scheduled_date }}</div>
+                            <div class="text-muted" style="font-size: 0.875rem;">{{ appointment.scheduled_time }}</div>
+                            <span class="badge badge-{{ appointment.status }}">{{ appointment.status }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div style="text-align: center; padding: 2rem; color: var(--neutral-400);">
+                        <i class="fas fa-calendar-times" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p>No upcoming appointments</p>
+                        <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-sm">Book Now</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title"><i class="fas fa-bell text-warning"></i> Notifications</h4>
+                </div>
+                <div class="card-body">
+                    {% if notifications %}
+                    {% for notification in notifications %}
+                    <div
+                        style="display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--neutral-100);">
+                        <div
+                            style="width: 40px; height: 40px; background: var(--primary-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-600); flex-shrink: 0;">
+                            <i
+                                class="fas fa-{% if notification.notification_type == 'appointment' %}calendar{% elif notification.notification_type == 'prescription' %}prescription{% else %}bell{% endif %}"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">{{ notification.title }}</div>
+                            <div class="text-muted" style="font-size: 0.875rem;">{{
+                                notification.message|truncatewords:15 }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div style="text-align: center; padding: 2rem; color: var(--neutral-400);">
+                        <i class="fas fa-bell-slash" style="font-size: 2rem;"></i>
+                        <p style="margin-top: 0.5rem;">No new notifications</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Prescriptions -->
+        {% if recent_prescriptions %}
+        <div class="card" style="margin-top: 1.5rem;">
+            <div class="card-header">
+                <h4 class="card-title"><i class="fas fa-prescription text-accent"></i> Recent Prescriptions</h4>
+                <a href="{% url 'patient_prescriptions' %}" class="btn btn-ghost btn-sm">View All</a>
+            </div>
+            <div class="table-container" style="box-shadow: none;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Prescription ID</th>
+                            <th>Doctor</th>
+                            <th>Issue Date</th>
+                            <th>Valid Until</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prescription in recent_prescriptions %}
+                        <tr>
+                            <td><strong>{{ prescription.prescription_id }}</strong></td>
+                            <td>Dr. {{ prescription.doctor.full_name }}</td>
+                            <td>{{ prescription.issue_date }}</td>
+                            <td>{{ prescription.valid_until|default:"N/A" }}</td>
+                            <td>
+                                <a href="{% url 'view_prescription_qr' prescription.prescription_id %}"
+                                    class="btn btn-ghost btn-sm">
+                                    <i class="fas fa-qrcode"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Quick Actions -->
+        <div class="card" style="margin-top: 1.5rem;">
+            <div class="card-header">
+                <h4 class="card-title"><i class="fas fa-bolt text-warning"></i> Quick Actions</h4>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding: 1rem 0;">
+                <a href="{% url 'book_appointment' %}" class="card"
+                    style="text-align: center; padding: 1.5rem; text-decoration: none;">
+                    <div
+                        style="width: 60px; height: 60px; margin: 0 auto 1rem; background: var(--primary-50); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-size: 1.5rem;">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div style="font-weight: 600; color: var(--neutral-800);">Video Consult</div>
+                </a>
+
+                <a href="{% url 'find_hospitals' %}" class="card"
+                    style="text-align: center; padding: 1.5rem; text-decoration: none;">
+                    <div
+                        style="width: 60px; height: 60px; margin: 0 auto 1rem; background: var(--accent-50); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: var(--accent-600); font-size: 1.5rem;">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <div style="font-weight: 600; color: var(--neutral-800);">Find Hospital</div>
+                </a>
+
+                <a href="{% url 'bed_availability' %}" class="card"
+                    style="text-align: center; padding: 1.5rem; text-decoration: none;">
+                    <div
+                        style="width: 60px; height: 60px; margin: 0 auto 1rem; background: rgba(245, 158, 11, 0.1); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.5rem;">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div style="font-weight: 600; color: var(--neutral-800);">Check Beds</div>
+                </a>
+
+                <a href="{% url 'mobile_clinics' %}" class="card"
+                    style="text-align: center; padding: 1.5rem; text-decoration: none;">
+                    <div
+                        style="width: 60px; height: 60px; margin: 0 auto 1rem; background: rgba(139, 92, 246, 0.1); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: #8b5cf6; font-size: 1.5rem;">
+                        <i class="fas fa-ambulance"></i>
+                    </div>
+                    <div style="font-weight: 600; color: var(--neutral-800);">Mobile Clinics</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

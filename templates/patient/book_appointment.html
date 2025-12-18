@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Appointment - TeleMed{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="margin-bottom: 2rem;">
+                <a href="{% url 'patient_dashboard' %}" class="btn btn-ghost btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <div class="card animate-fade-in">
+                <div class="card-header" style="border-bottom: none; padding-bottom: 0;">
+                    <h2 style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div
+                            style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-calendar-plus"></i>
+                        </div>
+                        Book an Appointment
+                    </h2>
+                </div>
+
+                <div style="padding: 2rem;">
+                    <form method="post" action="{% url 'book_appointment' %}">
+                        {% csrf_token %}
+
+                        <!-- Appointment Type -->
+                        <div class="form-group">
+                            <label class="form-label">Consultation Type *</label>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                                <label class="card"
+                                    style="cursor: pointer; padding: 1.5rem; text-align: center; border: 2px solid var(--neutral-200); transition: all 0.2s;">
+                                    <input type="radio" name="appointment_type" value="video" style="display: none;"
+                                        checked onchange="this.closest('.card').style.borderColor='var(--primary-500)'">
+                                    <div style="font-size: 2rem; color: var(--primary-600); margin-bottom: 0.5rem;">
+                                        <i class="fas fa-video"></i>
+                                    </div>
+                                    <div style="font-weight: 600;">Video Call</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">Face-to-face online</div>
+                                </label>
+
+                                <label class="card"
+                                    style="cursor: pointer; padding: 1.5rem; text-align: center; border: 2px solid var(--neutral-200); transition: all 0.2s;">
+                                    <input type="radio" name="appointment_type" value="chat" style="display: none;"
+                                        onchange="this.closest('.card').style.borderColor='var(--primary-500)'">
+                                    <div style="font-size: 2rem; color: var(--accent-600); margin-bottom: 0.5rem;">
+                                        <i class="fas fa-comments"></i>
+                                    </div>
+                                    <div style="font-weight: 600;">Chat</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">Text-based consult</div>
+                                </label>
+
+                                <label class="card"
+                                    style="cursor: pointer; padding: 1.5rem; text-align: center; border: 2px solid var(--neutral-200); transition: all 0.2s;">
+                                    <input type="radio" name="appointment_type" value="in_person" style="display: none;"
+                                        onchange="this.closest('.card').style.borderColor='var(--primary-500)'">
+                                    <div style="font-size: 2rem; color: #f59e0b; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-hospital"></i>
+                                    </div>
+                                    <div style="font-weight: 600;">In-Person</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">Visit hospital</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Select Doctor -->
+                        <div class="form-group">
+                            <label class="form-label" for="doctor">Select Doctor *</label>
+                            <select name="doctor" id="doctor" class="form-input" required>
+                                <option value="">Choose a doctor</option>
+                                {% for doctor in doctors %}
+                                <option value="{{ doctor.id }}">Dr. {{ doctor.full_name }} - {{
+                                    doctor.get_specialization_display }} (₹{{ doctor.consultation_fee }})</option>
+                                {% empty %}
+                                <option value="" disabled>No doctors available</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Date and Time -->
+                        <div class="grid grid-2" style="gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="scheduled_date">Preferred Date *</label>
+                                <input type="date" name="scheduled_date" id="scheduled_date" class="form-input" required
+                                    min="">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="scheduled_time">Preferred Time *</label>
+                                <input type="time" name="scheduled_time" id="scheduled_time" class="form-input"
+                                    required>
+                            </div>
+                        </div>
+
+                        <!-- Symptoms -->
+                        <div class="form-group">
+                            <label class="form-label" for="symptoms">Describe Your Symptoms *</label>
+                            <textarea name="symptoms" id="symptoms" class="form-input" rows="4"
+                                placeholder="Please describe your symptoms, how long you've had them, and any relevant medical history..."
+                                required></textarea>
+                            <p class="form-hint">This helps the doctor prepare for your consultation.</p>
+                        </div>
+
+                        <!-- Info Box -->
+                        <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>Before your appointment:</strong>
+                                <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
+                                    <li>Ensure stable internet connection for video calls</li>
+                                    <li>Keep your medical records and previous prescriptions handy</li>
+                                    <li>Join the consultation room 5 minutes early</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem;">
+                            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                                <i class="fas fa-calendar-check"></i> Confirm Booking
+                            </button>
+                            <a href="{% url 'patient_dashboard' %}" class="btn btn-outline btn-lg">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set minimum date to today
+    document.getElementById('scheduled_date').min = new Date().toISOString().split('T')[0];
+
+    // Handle consultation type selection
+    document.querySelectorAll('input[name="appointment_type"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            document.querySelectorAll('input[name="appointment_type"]').forEach(r => {
+                r.closest('.card').style.borderColor = 'var(--neutral-200)';
+            });
+            this.closest('.card').style.borderColor = 'var(--primary-500)';
+        });
+    });
+
+    // Trigger initial state
+    document.querySelector('input[name="appointment_type"]:checked').closest('.card').style.borderColor = 'var(--primary-500)';
+</script>
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Consultation Room - TeleMed{% endblock %}
+
+{% block content %}
+<div style="padding-top: 80px; min-height: 100vh; background: var(--neutral-100);">
+    <div class="container">
+        <!-- Header -->
+        <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div
+                    style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div>
+                    <h4 style="margin: 0;">Consultation: {{ appointment.booking_id }}</h4>
+                    <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+                        {% if request.user == appointment.patient.user %}
+                        With Dr. {{ appointment.doctor.full_name }}
+                        {% else %}
+                        With {{ appointment.patient.full_name }}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span class="badge badge-in-progress" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                    <i class="fas fa-circle" style="font-size: 0.5rem;"></i> Live
+                </span>
+                <a href="{% if request.user == appointment.patient.user %}{% url 'patient_dashboard' %}{% else %}{% url 'doctor_dashboard' %}{% endif %}"
+                    class="btn btn-outline">
+                    <i class="fas fa-times"></i> End Session
+                </a>
+            </div>
+        </div>
+
+        <!-- Consultation Area -->
+        <div class="consultation-container">
+            <!-- Main Video/Chat Area -->
+            <div class="consultation-main">
+                <div class="consultation-video">
+                    <div style="text-align: center;">
+                        <div
+                            style="width: 120px; height: 120px; margin: 0 auto 1rem; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-user-md" style="font-size: 4rem; opacity: 0.5;"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.5rem;">Video Consultation</h3>
+                        <p style="opacity: 0.7; font-size: 0.875rem;">
+                            Video call feature will be available with WebRTC integration.
+                            <br>Use the chat panel for now.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="consultation-controls">
+                    <button class="control-btn mute" title="Toggle Microphone">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="control-btn mute" title="Toggle Camera">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <button class="control-btn mute" title="Share Screen">
+                        <i class="fas fa-desktop"></i>
+                    </button>
+                    <button class="control-btn end-call" title="End Call" onclick="endCall()">
+                        <i class="fas fa-phone-slash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Panel -->
+            <div class="consultation-chat">
+                <div
+                    style="padding: 1rem; border-bottom: 1px solid var(--neutral-200); display: flex; align-items: center; justify-content: space-between;">
+                    <h5 style="margin: 0;"><i class="fas fa-comments text-primary"></i> Chat</h5>
+                    {% if request.user == appointment.doctor.user %}
+                    <a href="{% url 'create_prescription' appointment.id %}" class="btn btn-sm btn-accent">
+                        <i class="fas fa-prescription"></i> Write Prescription
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="chatbot-messages" id="consultation-messages"
+                    style="flex: 1; padding: 1rem; background: var(--neutral-50);">
+                    {% for msg in chat_messages %}
+                    <div class="chat-message {% if msg.is_from_doctor %}bot{% else %}user{% endif %}">
+                        <div style="font-size: 0.75rem; opacity: 0.7; margin-bottom: 0.25rem;">
+                            {% if msg.is_from_doctor %}Dr. {{ appointment.doctor.full_name }}{% else %}{{
+                            appointment.patient.full_name }}{% endif %}
+                            • {{ msg.timestamp|time:"H:i" }}
+                        </div>
+                        {{ msg.message }}
+                    </div>
+                    {% empty %}
+                    <div style="text-align: center; color: var(--neutral-400); padding: 2rem;">
+                        <i class="fas fa-comments" style="font-size: 2rem;"></i>
+                        <p style="margin-top: 0.5rem;">No messages yet. Start the conversation!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="chatbot-input-container">
+                    <input type="text" class="chatbot-input" id="message-input" placeholder="Type a message...">
+                    <button class="chatbot-send" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Info (for Doctor) -->
+        {% if request.user == appointment.doctor.user %}
+        <div class="card" style="margin-top: 1.5rem;">
+            <div class="card-header">
+                <h4 class="card-title"><i class="fas fa-user text-primary"></i> Patient Information</h4>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; padding: 1rem 0;">
+                <div>
+                    <div class="text-muted" style="font-size: 0.875rem;">Name</div>
+                    <div style="font-weight: 600;">{{ appointment.patient.full_name }}</div>
+                </div>
+                <div>
+                    <div class="text-muted" style="font-size: 0.875rem;">Age</div>
+                    <div style="font-weight: 600;">{{ appointment.patient.date_of_birth|default:"Not provided" }}</div>
+                </div>
+                <div>
+                    <div class="text-muted" style="font-size: 0.875rem;">Blood Group</div>
+                    <div style="font-weight: 600;">{{ appointment.patient.blood_group|default:"Not provided" }}</div>
+                </div>
+                <div>
+                    <div class="text-muted" style="font-size: 0.875rem;">Phone</div>
+                    <div style="font-weight: 600;">{{ appointment.patient.phone }}</div>
+                </div>
+            </div>
+            <div style="padding: 1rem 0; border-top: 1px solid var(--neutral-200);">
+                <div class="text-muted" style="font-size: 0.875rem; margin-bottom: 0.5rem;">Symptoms Reported</div>
+                <p style="margin: 0;">{{ appointment.symptoms|default:"No symptoms provided" }}</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    const consultationId = {{ consultation.id }};
+    const csrfToken = '{{ csrf_token }}';
+
+    function sendMessage() {
+        const input = document.getElementById('message-input');
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        // Add message to UI immediately
+        const messagesDiv = document.getElementById('consultation-messages');
+        const msgHtml = `
+        <div class="chat-message user">
+            <div style="font-size: 0.75rem; opacity: 0.7; margin-bottom: 0.25rem;">
+                You • Just now
+            </div>
+            ${message}
+        </div>
+    `;
+        messagesDiv.innerHTML += msgHtml;
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        input.value = '';
+
+        // Send to server
+        fetch('/api/send-message/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                consultation_id: consultationId,
+                message: message
+            })
+        });
+    }
+
+    document.getElementById('message-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    function endCall() {
+        if (confirm('Are you sure you want to end this consultation?')) {
+            window.location.href = '{% if request.user == appointment.patient.user %}{% url "patient_dashboard" %}{% else %}{% url "doctor_dashboard" %}{% endif %}';
+        }
+    }
+
+    // Scroll to bottom on load
+    document.getElementById('consultation-messages').scrollTop = document.getElementById('consultation-messages').scrollHeight;
+</script>
+{% endblock %}

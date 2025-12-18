@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mobile Clinics - TeleMed{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <!-- Header -->
+        <div class="section-header" style="margin-bottom: 2rem;">
+            <p class="section-subtitle">Healthcare That Comes to You</p>
+            <h2 class="section-title">Mobile Clinic Schedule</h2>
+            <p class="section-description">
+                Our mobile clinics bring healthcare services directly to your village.
+                Check the schedule and book your appointment.
+            </p>
+        </div>
+
+        <div class="grid grid-2" style="gap: 2rem;">
+            <!-- Map -->
+            <div>
+                <div
+                    style="width: 100%; height: 400px; background: linear-gradient(135deg, var(--primary-100) 0%, var(--accent-100) 100%); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; flex-direction: column; box-shadow: var(--shadow-lg);">
+                    <i class="fas fa-ambulance"
+                        style="font-size: 4rem; color: var(--primary-600); margin-bottom: 1rem;"></i>
+                    <p style="color: var(--neutral-600);">Mobile Clinic Locations</p>
+                    <p class="text-muted" style="font-size: 0.875rem;">Add Google Maps API key to view on map</p>
+                </div>
+            </div>
+
+            <!-- Upcoming Clinics -->
+            <div>
+                <h4 style="margin-bottom: 1rem;">
+                    <i class="fas fa-calendar-alt text-primary"></i> Upcoming Visits
+                </h4>
+
+                {% if clinics %}
+                <div style="max-height: 400px; overflow-y: auto;">
+                    {% for clinic in clinics %}
+                    <div class="card" style="margin-bottom: 1rem; padding: 1.25rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <h5 style="margin: 0 0 0.25rem 0;">{{ clinic.name }}</h5>
+                                <p class="text-muted" style="margin: 0; font-size: 0.875rem;">
+                                    <i class="fas fa-map-marker-alt"></i> {{ clinic.location }}
+                                </p>
+                            </div>
+                            <span class="badge badge-confirmed">Scheduled</span>
+                        </div>
+
+                        <div
+                            style="display: flex; gap: 1.5rem; margin: 1rem 0; padding: 0.75rem; background: var(--neutral-50); border-radius: var(--radius-md);">
+                            <div>
+                                <div class="text-muted" style="font-size: 0.75rem;">Date</div>
+                                <div style="font-weight: 600;">{{ clinic.scheduled_date }}</div>
+                            </div>
+                            <div>
+                                <div class="text-muted" style="font-size: 0.75rem;">Time</div>
+                                <div style="font-weight: 600;">{{ clinic.start_time }} - {{ clinic.end_time }}</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="text-muted" style="font-size: 0.75rem; margin-bottom: 0.25rem;">Services
+                                Available</div>
+                            <p style="margin: 0; font-size: 0.875rem;">{{ clinic.services }}</p>
+                        </div>
+
+                        <div style="margin-top: 1rem;">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination={{ clinic.latitude }},{{ clinic.longitude }}"
+                                target="_blank" class="btn btn-primary btn-sm">
+                                <i class="fas fa-directions"></i> Get Directions
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="card" style="text-align: center; padding: 3rem;">
+                    <i class="fas fa-ambulance"
+                        style="font-size: 3rem; color: var(--neutral-300); margin-bottom: 1rem;"></i>
+                    <h4 class="text-muted">No Upcoming Clinics</h4>
+                    <p class="text-muted">No mobile clinics are currently scheduled. Check back soon!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Info Section -->
+        <div class="card" style="margin-top: 2rem;">
+            <h4 style="margin-bottom: 1.5rem;"><i class="fas fa-info-circle text-primary"></i> What to Expect</h4>
+            <div class="grid grid-4" style="gap: 1.5rem;">
+                <div style="text-align: center;">
+                    <div
+                        style="width: 60px; height: 60px; margin: 0 auto 1rem; background: var(--primary-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-size: 1.5rem;">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h6>Health Checkups</h6>
+                    <p class="text-muted" style="font-size: 0.875rem;">Basic health examinations and vital signs check
+                    </p>
+                </div>
+
+                <div style="text-align: center;">
+                    <div
+                        style="width: 60px; height: 60px; margin: 0 auto 1rem; background: var(--accent-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent-600); font-size: 1.5rem;">
+                        <i class="fas fa-syringe"></i>
+                    </div>
+                    <h6>Vaccinations</h6>
+                    <p class="text-muted" style="font-size: 0.875rem;">Immunization for children and adults</p>
+                </div>
+
+                <div style="text-align: center;">
+                    <div
+                        style="width: 60px; height: 60px; margin: 0 auto 1rem; background: rgba(245, 158, 11, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.5rem;">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h6>Medicines</h6>
+                    <p class="text-muted" style="font-size: 0.875rem;">Free essential medicines distribution</p>
+                </div>
+
+                <div style="text-align: center;">
+                    <div
+                        style="width: 60px; height: 60px; margin: 0 auto 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #8b5cf6; font-size: 1.5rem;">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h6>Counseling</h6>
+                    <p class="text-muted" style="font-size: 0.875rem;">Health awareness and lifestyle guidance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

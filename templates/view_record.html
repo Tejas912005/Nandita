@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Medical Record {{ record.record_id }} - TeleMed{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <div style="max-width: 700px; margin: 0 auto;">
+            <a href="javascript:history.back()" class="btn btn-ghost btn-sm" style="margin-bottom: 1rem;">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+
+            <div class="card" style="overflow: hidden;">
+                <div
+                    style="background: linear-gradient(135deg, var(--accent-500) 0%, var(--accent-600) 100%); color: white; padding: 2rem; text-align: center;">
+                    <h2 style="color: white; margin-bottom: 0.5rem;">
+                        <i class="fas fa-file-medical"></i> Medical Record
+                    </h2>
+                    <p style="margin: 0; opacity: 0.9;">{{ record.record_id }}</p>
+                </div>
+
+                <div style="padding: 2rem;">
+                    <!-- QR Code -->
+                    <div
+                        style="text-align: center; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--neutral-200);">
+                        {% if record.qr_code %}
+                        <img src="{{ record.qr_code.url }}" alt="QR Code"
+                            style="width: 150px; height: 150px; border: 4px solid var(--accent-100); border-radius: var(--radius-lg);">
+                        {% else %}
+                        <div
+                            style="width: 150px; height: 150px; margin: 0 auto; background: var(--neutral-100); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-qrcode" style="font-size: 3rem; color: var(--neutral-400);"></i>
+                        </div>
+                        {% endif %}
+                        <p class="text-muted" style="margin-top: 0.5rem; font-size: 0.875rem;">Scan to access this
+                            record</p>
+                    </div>
+
+                    <div class="prescription-row">
+                        <div class="prescription-label">Patient</div>
+                        <div class="prescription-value">{{ record.patient.full_name }}</div>
+                    </div>
+
+                    <div class="prescription-row">
+                        <div class="prescription-label">Visit Date</div>
+                        <div class="prescription-value">{{ record.visit_date }}</div>
+                    </div>
+
+                    {% if record.doctor %}
+                    <div class="prescription-row">
+                        <div class="prescription-label">Doctor</div>
+                        <div class="prescription-value">
+                            Dr. {{ record.doctor.full_name }}<br>
+                            <span class="text-muted">{{ record.doctor.get_specialization_display }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div
+                        style="margin: 1.5rem 0; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: var(--radius-lg); border-left: 4px solid #ef4444;">
+                        <div style="font-weight: 600; color: #b91c1c; margin-bottom: 0.5rem;">
+                            <i class="fas fa-stethoscope"></i> Diagnosis
+                        </div>
+                        <div>{{ record.diagnosis }}</div>
+                    </div>
+
+                    <div
+                        style="margin: 1.5rem 0; padding: 1rem; background: var(--accent-50); border-radius: var(--radius-lg); border-left: 4px solid var(--accent-500);">
+                        <div style="font-weight: 600; color: var(--accent-700); margin-bottom: 0.5rem;">
+                            <i class="fas fa-notes-medical"></i> Treatment
+                        </div>
+                        <div style="white-space: pre-line;">{{ record.treatment }}</div>
+                    </div>
+
+                    {% if record.attachments %}
+                    <div style="margin-top: 1.5rem;">
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">
+                            <i class="fas fa-paperclip"></i> Attachments
+                        </div>
+                        <a href="{{ record.attachments.url }}" class="btn btn-secondary btn-sm" target="_blank">
+                            <i class="fas fa-download"></i> Download Attachment
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button onclick="window.print()" class="btn btn-secondary">
+                    <i class="fas fa-print"></i> Print Record
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

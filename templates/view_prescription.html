@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Prescription {{ prescription.prescription_id }} - TeleMed{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <div style="max-width: 700px; margin: 0 auto;">
+            <a href="javascript:history.back()" class="btn btn-ghost btn-sm" style="margin-bottom: 1rem;">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+
+            <div class="prescription-card">
+                <div class="prescription-header">
+                    <h2 style="color: white; margin-bottom: 0.5rem;">
+                        <i class="fas fa-prescription"></i> Digital Prescription
+                    </h2>
+                    <p style="margin: 0; opacity: 0.9;">{{ prescription.prescription_id }}</p>
+                </div>
+
+                <div class="prescription-body">
+                    <!-- QR Code -->
+                    <div
+                        style="text-align: center; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--neutral-200);">
+                        {% if prescription.qr_code %}
+                        <img src="{{ prescription.qr_code.url }}" alt="QR Code"
+                            style="width: 150px; height: 150px; border: 4px solid var(--primary-100); border-radius: var(--radius-lg);">
+                        {% else %}
+                        <div
+                            style="width: 150px; height: 150px; margin: 0 auto; background: var(--neutral-100); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-qrcode" style="font-size: 3rem; color: var(--neutral-400);"></i>
+                        </div>
+                        {% endif %}
+                        <p class="text-muted" style="margin-top: 0.5rem; font-size: 0.875rem;">Scan to verify
+                            prescription</p>
+                    </div>
+
+                    <div class="prescription-row">
+                        <div class="prescription-label">Patient</div>
+                        <div class="prescription-value">{{ prescription.patient.full_name }}</div>
+                    </div>
+
+                    <div class="prescription-row">
+                        <div class="prescription-label">Prescribed By</div>
+                        <div class="prescription-value">
+                            Dr. {{ prescription.doctor.full_name }}<br>
+                            <span class="text-muted">{{ prescription.doctor.get_specialization_display }} | {{
+                                prescription.doctor.qualification }}</span>
+                        </div>
+                    </div>
+
+                    <div class="prescription-row">
+                        <div class="prescription-label">Issue Date</div>
+                        <div class="prescription-value">{{ prescription.issue_date }}</div>
+                    </div>
+
+                    {% if prescription.valid_until %}
+                    <div class="prescription-row">
+                        <div class="prescription-label">Valid Until</div>
+                        <div class="prescription-value">{{ prescription.valid_until }}</div>
+                    </div>
+                    {% endif %}
+
+                    <div
+                        style="margin: 1.5rem 0; padding: 1rem; background: var(--primary-50); border-radius: var(--radius-lg);">
+                        <div style="font-weight: 600; color: var(--primary-700); margin-bottom: 0.5rem;">
+                            <i class="fas fa-pills"></i> Medications
+                        </div>
+                        <div style="white-space: pre-line;">{{ prescription.medications }}</div>
+                    </div>
+
+                    <div
+                        style="margin: 1.5rem 0; padding: 1rem; background: var(--accent-50); border-radius: var(--radius-lg);">
+                        <div style="font-weight: 600; color: var(--accent-700); margin-bottom: 0.5rem;">
+                            <i class="fas fa-info-circle"></i> Instructions
+                        </div>
+                        <div style="white-space: pre-line;">{{ prescription.instructions }}</div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>This is a digital prescription. Take medicines only as prescribed by the doctor.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button onclick="window.print()" class="btn btn-secondary">
+                    <i class="fas fa-print"></i> Print Prescription
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

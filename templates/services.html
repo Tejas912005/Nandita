@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Services - TeleMed{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section
+    style="padding-top: 120px; padding-bottom: 80px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%);">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <p class="section-subtitle">Our Services</p>
+            <h1>Complete <span class="text-primary">Healthcare Solutions</span></h1>
+            <p style="font-size: 1.25rem; color: var(--neutral-600); margin-top: 1.5rem;">
+                From online consultations to mobile clinics, we provide comprehensive
+                healthcare services designed for rural communities.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Services Grid -->
+<section class="section">
+    <div class="container">
+        <div class="grid grid-2" style="gap: 2rem;">
+            <!-- Video Consultation -->
+            <div class="card" style="padding: 2rem;">
+                <div style="display: flex; gap: 1.5rem;">
+                    <div
+                        style="width: 80px; height: 80px; background: var(--primary-50); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-size: 2rem; flex-shrink: 0;">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div>
+                        <h3>Video Consultation</h3>
+                        <p class="text-muted" style="margin-bottom: 1rem;">
+                            Connect face-to-face with doctors through secure video calls.
+                            Get diagnosed and treated from the comfort of your home.
+                        </p>
+                        <ul style="color: var(--neutral-600); padding-left: 1.5rem; margin-bottom: 1rem;">
+                            <li>HD quality video calls</li>
+                            <li>Screen sharing for reports</li>
+                            <li>Recording available</li>
+                            <li>Works on low bandwidth</li>
+                        </ul>
+                        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Consultation -->
+            <div class="card" style="padding: 2rem;">
+                <div style="display: flex; gap: 1.5rem;">
+                    <div
+                        style="width: 80px; height: 80px; background: var(--accent-50); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: var(--accent-600); font-size: 2rem; flex-shrink: 0;">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div>
+                        <h3>Chat Consultation</h3>
+                        <p class="text-muted" style="margin-bottom: 1rem;">
+                            Can't do video? No problem! Chat with doctors via text messages.
+                            Share symptoms and get instant medical advice.
+                        </p>
+                        <ul style="color: var(--neutral-600); padding-left: 1.5rem; margin-bottom: 1rem;">
+                            <li>Text-based consultation</li>
+                            <li>Share images & reports</li>
+                            <li>Asynchronous replies</li>
+                            <li>Chat history saved</li>
+                        </ul>
+                        <a href="{% url 'register' %}" class="btn btn-accent btn-sm">Start Chat</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Clinics -->
+            <div class="card" style="padding: 2rem;">
+                <div style="display: flex; gap: 1.5rem;">
+                    <div
+                        style="width: 80px; height: 80px; background: rgba(245, 158, 11, 0.1); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 2rem; flex-shrink: 0;">
+                        <i class="fas fa-ambulance"></i>
+                    </div>
+                    <div>
+                        <h3>Mobile Clinics</h3>
+                        <p class="text-muted" style="margin-bottom: 1rem;">
+                            Healthcare comes to you! Book appointments with mobile clinics
+                            visiting your village for in-person checkups.
+                        </p>
+                        <ul style="color: var(--neutral-600); padding-left: 1.5rem; margin-bottom: 1rem;">
+                            <li>Scheduled village visits</li>
+                            <li>Basic health checkups</li>
+                            <li>Vaccinations</li>
+                            <li>Medicines distributed</li>
+                        </ul>
+                        <a href="{% url 'mobile_clinics' %}" class="btn btn-outline btn-sm">View Schedule</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Records -->
+            <div class="card" style="padding: 2rem;">
+                <div style="display: flex; gap: 1.5rem;">
+                    <div
+                        style="width: 80px; height: 80px; background: rgba(139, 92, 246, 0.1); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: #8b5cf6; font-size: 2rem; flex-shrink: 0;">
+                        <i class="fas fa-file-medical"></i>
+                    </div>
+                    <div>
+                        <h3>Digital Medical Records</h3>
+                        <p class="text-muted" style="margin-bottom: 1rem;">
+                            Access your medical records anytime with QR codes.
+                            Share with any hospital instantly for better treatment.
+                        </p>
+                        <ul style="color: var(--neutral-600); padding-left: 1.5rem; margin-bottom: 1rem;">
+                            <li>Secure cloud storage</li>
+                            <li>QR code sharing</li>
+                            <li>Treatment history</li>
+                            <li>Prescription archive</li>
+                        </ul>
+                        <a href="{% url 'register' %}" class="btn btn-outline btn-sm">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bed Availability -->
+            <div class="card" style="padding: 2rem;">
+                <div style="display: flex; gap: 1.5rem;">
+                    <div
+                        style="width: 80px; height: 80px; background: rgba(236, 72, 153, 0.1); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: #ec4899; font-size: 2rem; flex-shrink: 0;">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div>
+                        <h3>Bed Availability Tracker</h3>
+                        <p class="text-muted" style="margin-bottom: 1rem;">
+                            Check real-time bed availability across hospitals.
+                            Find the right facility during emergencies instantly.
+                        </p>
+                        <ul style="color: var(--neutral-600); padding-left: 1.5rem; margin-bottom: 1rem;">
+                            <li>Real-time updates</li>
+                            <li>Ward-wise availability</li>
+                            <li>Multiple hospitals</li>
+                            <li>Emergency priority</li>
+                        </ul>
+                        <a href="{% url 'bed_availability' %}" class="btn btn-outline btn-sm">Check Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Health Assistant -->
+            <div class="card" style="padding: 2rem;">
+                <div style="display: flex; gap: 1.5rem;">
+                    <div
+                        style="width: 80px; height: 80px; background: rgba(59, 130, 246, 0.1); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 2rem; flex-shrink: 0;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3>AI Health Assistant (C_Bot)</h3>
+                        <p class="text-muted" style="margin-bottom: 1rem;">
+                            Our C_Bot chatbot answers your health questions 24/7.
+                            Get preliminary guidance before consulting a doctor.
+                        </p>
+                        <ul style="color: var(--neutral-600); padding-left: 1.5rem; margin-bottom: 1rem;">
+                            <li>24/7 availability</li>
+                            <li>Symptom checker</li>
+                            <li>Appointment booking</li>
+                            <li>Hospital finder</li>
+                        </ul>
+                        <button onclick="document.getElementById('chatbot-toggle').click()"
+                            class="btn btn-outline btn-sm">Try C_Bot</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section style="background: var(--gradient-primary); padding: 4rem 0;">
+    <div class="container" style="text-align: center; color: white;">
+        <h2 style="color: white; margin-bottom: 1rem;">Start Your Healthcare Journey Today</h2>
+        <p style="opacity: 0.9; max-width: 600px; margin: 0 auto 2rem;">
+            Register now and get access to all our healthcare services from the comfort of your home.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 1rem;">
+            <a href="{% url 'register' %}" class="btn btn-lg" style="background: white; color: var(--primary-600);">
+                <i class="fas fa-user-plus"></i> Register Free
+            </a>
+            <a href="{% url 'contact' %}" class="btn btn-lg"
+                style="background: transparent; color: white; border: 2px solid white;">
+                <i class="fas fa-phone"></i> Contact Us
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

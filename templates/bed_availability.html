@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bed Availability - TeleMed{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <!-- Header -->
+        <div class="section-header" style="margin-bottom: 2rem;">
+            <p class="section-subtitle">Real-Time Tracking</p>
+            <h2 class="section-title">Hospital Bed Availability</h2>
+            <p class="section-description">
+                Check real-time bed availability across hospitals. Plan your visit better during emergencies.
+            </p>
+        </div>
+
+        <!-- Filters -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                <div style="flex: 1; min-width: 200px;">
+                    <label class="form-label">Filter by Ward Type</label>
+                    <select id="ward-filter" class="form-input" onchange="filterWard(this.value)">
+                        <option value="">All Wards</option>
+                        {% for value, label in ward_types %}
+                        <option value="{{ value }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">&nbsp;</label>
+                    <a href="{% url 'find_hospitals' %}" class="btn btn-secondary">
+                        <i class="fas fa-map-marker-alt"></i> View on Map
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="card" style="margin-bottom: 2rem; display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
+            <span style="font-weight: 600;">Legend:</span>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span
+                    style="width: 20px; height: 20px; background: var(--accent-500); border-radius: var(--radius-sm);"></span>
+                <span>Available</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span
+                    style="width: 20px; height: 20px; background: var(--neutral-300); border-radius: var(--radius-sm);"></span>
+                <span>Occupied</span>
+            </div>
+        </div>
+
+        <!-- Hospital Bed Cards -->
+        <div class="grid grid-2" style="gap: 1.5rem;">
+            {% for hospital in hospitals %}
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h4 class="card-title">
+                            <i class="fas fa-hospital text-primary"></i> {{ hospital.name }}
+                        </h4>
+                        <p class="text-muted" style="font-size: 0.875rem; margin: 0;">{{ hospital.address }}</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--accent-600);">
+                            {{ hospital.available_beds_count }}
+                        </div>
+                        <div class="text-muted" style="font-size: 0.75rem;">beds available</div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Ward-wise breakdown -->
+                    {% regroup hospital.beds.all by ward_type as beds_by_ward %}
+                    {% for ward in beds_by_ward %}
+                    <div style="margin-bottom: 1rem;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="font-weight: 500;">{{ ward.grouper|title }} Ward</span>
+                            <span class="text-muted" style="font-size: 0.875rem;">
+                                {% with available=0 total=0 %}
+                                {{ ward.list|length }} beds
+                                {% endwith %}
+                            </span>
+                        </div>
+                        <div class="bed-grid">
+                            {% for bed in ward.list %}
+                            <div class="bed-icon {% if bed.is_available %}available{% else %}occupied{% endif %}"
+                                title="Bed {{ bed.bed_number }} - {% if bed.is_available %}Available{% else %}Occupied{% endif %}">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div style="text-align: center; padding: 2rem; color: var(--neutral-400);">
+                        <i class="fas fa-bed" style="font-size: 2rem;"></i>
+                        <p style="margin-top: 0.5rem;">No beds registered</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="card-footer" style="display: flex; gap: 1rem;">
+                    <a href="{% url 'hospital_detail' hospital.id %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-eye"></i> View Hospital
+                    </a>
+                    <a href="tel:{{ hospital.phone }}" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-phone"></i> Call Hospital
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="card" style="grid-column: span 2; text-align: center; padding: 4rem;">
+                <i class="fas fa-hospital-slash"
+                    style="font-size: 4rem; color: var(--neutral-300); margin-bottom: 1rem;"></i>
+                <h3 class="text-muted">No Hospitals Available</h3>
+                <p class="text-muted">No hospitals are currently registered in the system.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Emergency Contact -->
+        <div class="card"
+            style="margin-top: 2rem; text-align: center; background: var(--gradient-primary); color: white;">
+            <h4 style="color: white;">Need Emergency Assistance?</h4>
+            <p style="opacity: 0.9;">Call emergency services or find the nearest hospital</p>
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                <a href="tel:108" class="btn btn-lg" style="background: white; color: var(--primary-600);">
+                    <i class="fas fa-ambulance"></i> Call 108
+                </a>
+                <a href="{% url 'find_hospitals' %}" class="btn btn-lg"
+                    style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;">
+                    <i class="fas fa-map-marker-alt"></i> Find Hospital
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterWard(ward) {
+        if (ward) {
+            window.location.href = `?ward=${ward}`;
+        } else {
+            window.location.href = '{% url "bed_availability" %}';
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register as Doctor - TeleMed{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-container" style="max-width: 700px;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <a href="{% url 'home' %}" class="navbar-brand" style="display: inline-flex; font-size: 2rem;">
+                <i class="fas fa-heartbeat"></i>
+                <span>TeleMed</span>
+            </a>
+        </div>
+
+        <div class="auth-card animate-fade-in">
+            <div class="auth-header">
+                <h2 class="auth-title"><i class="fas fa-user-md"></i> Join as Doctor</h2>
+                <p class="auth-subtitle">Help rural communities access quality healthcare</p>
+            </div>
+
+            <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                <i class="fas fa-info-circle"></i>
+                <span>Your profile will be verified before you can start consultations.</span>
+            </div>
+
+            <form method="post" action="{% url 'register_doctor' %}">
+                {% csrf_token %}
+
+                <h5 style="margin-bottom: 1rem; color: var(--primary-600);"><i class="fas fa-user"></i> Account Details
+                </h5>
+
+                <div class="grid grid-2" style="gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username *</label>
+                        <input type="text" name="username" id="username" class="form-input"
+                            placeholder="Choose a username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email *</label>
+                        <input type="email" name="email" id="email" class="form-input" placeholder="your@email.com"
+                            required>
+                    </div>
+                </div>
+
+                <div class="grid grid-2" style="gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="password1">Password *</label>
+                        <input type="password" name="password1" id="password1" class="form-input"
+                            placeholder="Create password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password2">Confirm Password *</label>
+                        <input type="password" name="password2" id="password2" class="form-input"
+                            placeholder="Confirm password" required>
+                    </div>
+                </div>
+
+                <hr style="margin: 1.5rem 0; border-color: var(--neutral-200);">
+
+                <h5 style="margin-bottom: 1rem; color: var(--primary-600);"><i class="fas fa-stethoscope"></i>
+                    Professional Details</h5>
+
+                <div class="grid grid-2" style="gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="full_name">Full Name *</label>
+                        <input type="text" name="full_name" id="full_name" class="form-input"
+                            placeholder="Dr. Full Name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number *</label>
+                        <input type="tel" name="phone" id="phone" class="form-input" placeholder="+91 XXXXX XXXXX"
+                            required>
+                    </div>
+                </div>
+
+                <div class="grid grid-2" style="gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="specialization">Specialization *</label>
+                        <select name="specialization" id="specialization" class="form-input" required>
+                            <option value="">Select Specialization</option>
+                            <option value="general">General Physician</option>
+                            <option value="cardiology">Cardiology</option>
+                            <option value="dermatology">Dermatology</option>
+                            <option value="neurology">Neurology</option>
+                            <option value="orthopedics">Orthopedics</option>
+                            <option value="pediatrics">Pediatrics</option>
+                            <option value="psychiatry">Psychiatry</option>
+                            <option value="gynecology">Gynecology</option>
+                            <option value="ophthalmology">Ophthalmology</option>
+                            <option value="ent">ENT Specialist</option>
+                            <option value="dentistry">Dentistry</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="qualification">Qualification *</label>
+                        <input type="text" name="qualification" id="qualification" class="form-input"
+                            placeholder="e.g., MBBS, MD, MS" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-3" style="gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label" for="license_number">Medical License No. *</label>
+                        <input type="text" name="license_number" id="license_number" class="form-input"
+                            placeholder="License number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="experience_years">Experience (Years) *</label>
+                        <input type="number" name="experience_years" id="experience_years" class="form-input"
+                            placeholder="Years" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="consultation_fee">Consultation Fee (₹) *</label>
+                        <input type="number" name="consultation_fee" id="consultation_fee" class="form-input"
+                            placeholder="500" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="bio">Bio / About</label>
+                    <textarea name="bio" id="bio" class="form-input" rows="3"
+                        placeholder="Brief description about yourself, your expertise and experience..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-group">
+                        <input type="checkbox" name="terms" required>
+                        <span>I confirm that all information provided is accurate and I agree to the <a href="#">Terms
+                                of Service</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-full">
+                    <i class="fas fa-user-md"></i> Submit for Verification
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="{% url 'login' %}">Login here</a>
+            </div>
+
+            <div style="text-align: center; margin-top: 1rem;">
+                <span class="text-muted">Looking to get treatment?</span>
+                <a href="{% url 'register_patient' %}" class="text-primary"> Register as Patient</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
