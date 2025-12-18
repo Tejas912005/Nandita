@@ -41,8 +41,7 @@
                                 </div>
                                 <div>
                                     <div style="font-weight: 500;">Dr. {{ appointment.doctor.full_name }}</div>
-                                    <div class="text-muted" style="font-size: 0.75rem;">{{
-                                        appointment.doctor.get_specialization_display }}</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">{{ appointment.doctor.get_specialization_display }}</div>
                                 </div>
                             </div>
                         </td>
@@ -77,8 +76,7 @@
             {% if appointments.has_previous %}
             <a href="?page={{ appointments.previous_page_number }}" class="btn btn-outline btn-sm">&laquo; Previous</a>
             {% endif %}
-            <span class="btn btn-ghost btn-sm">Page {{ appointments.number }} of {{ appointments.paginator.num_pages
-                }}</span>
+            <span class="btn btn-ghost btn-sm">Page {{ appointments.number }} of {{ appointments.paginator.num_pages }}</span>
             {% if appointments.has_next %}
             <a href="?page={{ appointments.next_page_number }}" class="btn btn-outline btn-sm">Next &raquo;</a>
             {% endif %}

@@ -73,8 +73,7 @@
                             <select name="doctor" id="doctor" class="form-input" required>
                                 <option value="">Choose a doctor</option>
                                 {% for doctor in doctors %}
-                                <option value="{{ doctor.id }}">Dr. {{ doctor.full_name }} - {{
-                                    doctor.get_specialization_display }} (₹{{ doctor.consultation_fee }})</option>
+                                <option value="{{ doctor.id }}">Dr. {{ doctor.full_name }} - {{ doctor.get_specialization_display }} (₹{{ doctor.consultation_fee }})</option>
                                 {% empty %}
                                 <option value="" disabled>No doctors available</option>
                                 {% endfor %}

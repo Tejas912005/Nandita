@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Prescription - Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="margin-bottom: 2rem;">
+                <a href="{% url 'doctor_appointments' %}" class="btn btn-ghost btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back to Appointments
+                </a>
+            </div>
+
+            <div class="card animate-fade-in">
+                <div class="card-header" style="border-bottom: none; padding-bottom: 0;">
+                    <h2 style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div
+                            style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-prescription"></i>
+                        </div>
+                        Create Prescription
+                    </h2>
+                </div>
+
+                <div style="padding: 2rem;">
+                    <!-- Patient Info -->
+                    <div class="alert alert-info" style="margin-bottom: 2rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div
+                                style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-600);">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">{{ appointment.patient.full_name }}</div>
+                                <div class="text-muted" style="font-size: 0.875rem;">
+                                    Appointment: {{ appointment.booking_id }} | {{ appointment.scheduled_date }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label class="form-label" for="diagnosis">Diagnosis *</label>
+                            <textarea name="diagnosis" id="diagnosis" class="form-input" rows="3"
+                                placeholder="Enter diagnosis details..."
+                                required>{{ form.diagnosis.value|default:'' }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="medications">Medications *</label>
+                            <textarea name="medications" id="medications" class="form-input" rows="6" placeholder="Enter medications with dosage instructions...
+Example:
+1. Paracetamol 500mg - 1 tablet, 3 times a day, after meals
+2. Vitamin C 500mg - 1 tablet, once daily" required>{{ form.medications.value|default:'' }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="instructions">Additional Instructions</label>
+                            <textarea name="instructions" id="instructions" class="form-input" rows="3"
+                                placeholder="Diet recommendations, lifestyle changes, follow-up instructions...">{{ form.instructions.value|default:'' }}</textarea>
+                        </div>
+
+                        <div class="grid grid-2" style="gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="valid_until">Valid Until</label>
+                                <input type="date" name="valid_until" id="valid_until" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="follow_up_date">Follow-up Date</label>
+                                <input type="date" name="follow_up_date" id="follow_up_date" class="form-input">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                            <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                                <i class="fas fa-check"></i> Create Prescription
+                            </button>
+                            <a href="{% url 'doctor_appointments' %}" class="btn btn-outline btn-lg">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

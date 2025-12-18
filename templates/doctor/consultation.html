@@ -29,8 +29,8 @@
                 <span class="badge badge-in-progress" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
                     <i class="fas fa-circle" style="font-size: 0.5rem;"></i> Live
                 </span>
-                <a href="{% if request.user == appointment.patient.user %}{% url 'patient_dashboard' %}{% else %}{% url 'doctor_dashboard' %}{% endif %}"
-                    class="btn btn-outline">
+                <a href="{% url 'end_consultation' appointment.id %}" class="btn btn-outline"
+                    style="color: var(--error); border-color: var(--error);">
                     <i class="fas fa-times"></i> End Session
                 </a>
             </div>
@@ -87,9 +87,8 @@
                     {% for msg in chat_messages %}
                     <div class="chat-message {% if msg.is_from_doctor %}bot{% else %}user{% endif %}">
                         <div style="font-size: 0.75rem; opacity: 0.7; margin-bottom: 0.25rem;">
-                            {% if msg.is_from_doctor %}Dr. {{ appointment.doctor.full_name }}{% else %}{{
-                            appointment.patient.full_name }}{% endif %}
-                            • {{ msg.timestamp|time:"H:i" }}
+                            {% if msg.is_from_doctor %}Dr. {{ appointment.doctor.full_name }}{% else %}{{ appointment.patient.full_name }}{% endif %}
+                            â€¢ {{ msg.timestamp|time:"H:i" }}
                         </div>
                         {{ msg.message }}
                     </div>
@@ -158,7 +157,7 @@
         const msgHtml = `
         <div class="chat-message user">
             <div style="font-size: 0.75rem; opacity: 0.7; margin-bottom: 0.25rem;">
-                You • Just now
+                You â€¢ Just now
             </div>
             ${message}
         </div>
@@ -189,7 +188,7 @@
 
     function endCall() {
         if (confirm('Are you sure you want to end this consultation?')) {
-            window.location.href = '{% if request.user == appointment.patient.user %}{% url "patient_dashboard" %}{% else %}{% url "doctor_dashboard" %}{% endif %}';
+            window.location.href = "{% url 'end_consultation' appointment.id %}";
         }
     }
 

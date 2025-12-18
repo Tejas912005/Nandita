@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Appointments - Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h2>My Appointments</h2>
+                <p class="text-muted">Manage your patient appointments</p>
+            </div>
+            <a href="{% url 'doctor_dashboard' %}" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+            <a href="{% url 'doctor_appointments' %}"
+                class="btn {% if not request.GET.status %}btn-primary{% else %}btn-outline{% endif %} btn-sm">All</a>
+            <a href="?status=pending"
+                class="btn {% if request.GET.status == 'pending' %}btn-primary{% else %}btn-outline{% endif %} btn-sm">Pending</a>
+            <a href="?status=confirmed"
+                class="btn {% if request.GET.status == 'confirmed' %}btn-primary{% else %}btn-outline{% endif %} btn-sm">Confirmed</a>
+            <a href="?status=completed"
+                class="btn {% if request.GET.status == 'completed' %}btn-primary{% else %}btn-outline{% endif %} btn-sm">Completed</a>
+        </div>
+
+        {% if appointments %}
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Patient</th>
+                        <th>Date & Time</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td><strong>{{ appointment.booking_id }}</strong></td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div
+                                    style="width: 40px; height: 40px; background: var(--accent-50); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent-600);">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 500;">{{ appointment.patient.full_name }}</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">{{ appointment.patient.phone }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 500;">{{ appointment.scheduled_date }}</div>
+                            <div class="text-muted" style="font-size: 0.875rem;">{{ appointment.scheduled_time }}</div>
+                        </td>
+                        <td>
+                            <span style="display: inline-flex; align-items: center; gap: 0.25rem;">
+                                <i
+                                    class="fas fa-{% if appointment.appointment_type == 'video' %}video{% elif appointment.appointment_type == 'chat' %}comments{% else %}hospital{% endif %}"></i>
+                                {{ appointment.get_appointment_type_display }}
+                            </span>
+                        </td>
+                        <td><span class="badge badge-{{ appointment.status }}">{{ appointment.status }}</span></td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                {% if appointment.status == 'pending' %}
+                                <form method="post" action="{% url 'update_appointment_status' appointment.id %}"
+                                    style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="confirmed">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-check"></i> Confirm
+                                    </button>
+                                </form>
+                                <form method="post" action="{% url 'update_appointment_status' appointment.id %}"
+                                    style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="cancelled">
+                                    <button type="submit" class="btn btn-outline btn-sm" style="color: var(--error);">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
+                                {% elif appointment.status == 'confirmed' %}
+                                <a href="{% url 'doctor_consultation' appointment.id %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-video"></i> Start
+                                </a>
+                                {% elif appointment.status == 'in_progress' %}
+                                <a href="{% url 'doctor_consultation' appointment.id %}" class="btn btn-accent btn-sm">
+                                    <i class="fas fa-video"></i> Continue
+                                </a>
+                                {% elif appointment.status == 'completed' %}
+                                <a href="{% url 'create_prescription' appointment.id %}"
+                                    class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-prescription"></i> Prescribe
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if appointments.has_other_pages %}
+        <div style="display: flex; justify-content: center; margin-top: 2rem; gap: 0.5rem;">
+            {% if appointments.has_previous %}
+            <a href="?page={{ appointments.previous_page_number }}" class="btn btn-outline btn-sm">&laquo; Previous</a>
+            {% endif %}
+            <span class="btn btn-ghost btn-sm">Page {{ appointments.number }} of {{ appointments.paginator.num_pages
+                }}</span>
+            {% if appointments.has_next %}
+            <a href="?page={{ appointments.next_page_number }}" class="btn btn-outline btn-sm">Next &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="card" style="text-align: center; padding: 4rem;">
+            <i class="fas fa-calendar-times"
+                style="font-size: 4rem; color: var(--neutral-300); margin-bottom: 1rem;"></i>
+            <h3 class="text-muted">No Appointments Found</h3>
+            <p class="text-muted">You don't have any appointments yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

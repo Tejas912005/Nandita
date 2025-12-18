@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ hospital.name }} - TeleMed{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <!-- Back Button -->
+        <a href="{% url 'find_hospitals' %}" class="btn btn-ghost btn-sm" style="margin-bottom: 1.5rem;">
+            <i class="fas fa-arrow-left"></i> Back to Hospitals
+        </a>
+
+        <!-- Hospital Header -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-body" style="display: flex; gap: 2rem; align-items: flex-start; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div
+                            style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-hospital" style="font-size: 2rem; color: white;"></i>
+                        </div>
+                        <div>
+                            <h1 style="margin: 0; font-size: 1.75rem;">{{ hospital.name }}</h1>
+                            <p class="text-muted" style="margin: 0.25rem 0 0 0;">
+                                <i class="fas fa-map-marker-alt"></i> {{ hospital.address }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.5rem;">
+                        {% if hospital.phone %}
+                        <div>
+                            <span class="text-muted">Phone</span>
+                            <div style="font-weight: 500;">
+                                <i class="fas fa-phone text-primary"></i> {{ hospital.phone }}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if hospital.email %}
+                        <div>
+                            <span class="text-muted">Email</span>
+                            <div style="font-weight: 500;">
+                                <i class="fas fa-envelope text-primary"></i> {{ hospital.email }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <div class="stat-card" style="min-width: 120px; text-align: center; padding: 1rem;">
+                        <div class="stat-value" style="color: var(--primary-600);">{{ beds.count }}</div>
+                        <div class="stat-label">Total Beds</div>
+                    </div>
+                    <div class="stat-card" style="min-width: 120px; text-align: center; padding: 1rem;">
+                        <div class="stat-value" style="color: var(--accent-600);">{{ doctors.count }}</div>
+                        <div class="stat-label">Doctors</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-2" style="gap: 2rem;">
+            <!-- Bed Availability Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-bed text-primary"></i> Bed Availability</h3>
+                </div>
+                <div class="card-body">
+                    {% if beds %}
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Bed No.</th>
+                                    <th>Ward Type</th>
+                                    <th>Daily Rate</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bed in beds %}
+                                <tr>
+                                    <td><strong>{{ bed.bed_number }}</strong></td>
+                                    <td>{{ bed.get_ward_type_display }}</td>
+                                    <td>₹{{ bed.daily_rate }}</td>
+                                    <td>
+                                        {% if bed.is_available %}
+                                        <span class="badge badge-success">Available</span>
+                                        {% else %}
+                                        <span class="badge badge-error">Occupied</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-bed" style="font-size: 2rem; color: var(--neutral-300);"></i>
+                        <p class="text-muted">No bed information available</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Doctors Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-user-md text-accent"></i> Available Doctors</h3>
+                </div>
+                <div class="card-body">
+                    {% if doctors %}
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for doctor in doctors %}
+                        <div
+                            style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--neutral-50); border-radius: var(--radius-md);">
+                            <div
+                                style="width: 50px; height: 50px; background: var(--primary-100); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user-md" style="color: var(--primary-600);"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600;">Dr. {{ doctor.full_name }}</div>
+                                <div class="text-muted" style="font-size: 0.875rem;">{{
+                                    doctor.get_specialization_display }}</div>
+                            </div>
+                            <a href="{% url 'book_appointment' %}?doctor={{ doctor.id }}"
+                                class="btn btn-primary btn-sm">
+                                <i class="fas fa-calendar-plus"></i> Book
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-user-md" style="font-size: 2rem; color: var(--neutral-300);"></i>
+                        <p class="text-muted">No doctors listed for this hospital</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="card" style="margin-top: 2rem;">
+            <div class="card-body" style="text-align: center;">
+                <h3>Need to Contact This Hospital?</h3>
+                <p class="text-muted">For emergencies or direct inquiries, reach out to the hospital directly.</p>
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    {% if hospital.phone %}
+                    <a href="tel:{{ hospital.phone }}" class="btn btn-primary">
+                        <i class="fas fa-phone"></i> Call Hospital
+                    </a>
+                    {% endif %}
+                    {% if hospital.email %}
+                    <a href="mailto:{{ hospital.email }}" class="btn btn-secondary">
+                        <i class="fas fa-envelope"></i> Send Email
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

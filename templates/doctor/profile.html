@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - Doctor Dashboard{% endblock %}
+
+{% block content %}
+<div style="padding-top: 100px; min-height: 100vh; background: var(--neutral-50);">
+    <div class="container">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="margin-bottom: 2rem;">
+                <a href="{% url 'doctor_dashboard' %}" class="btn btn-ghost btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <div class="card animate-fade-in">
+                <div class="card-header" style="border-bottom: none; padding-bottom: 0;">
+                    <h2 style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div
+                            style="width: 50px; height: 50px; background: var(--gradient-primary); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        My Profile
+                    </h2>
+                </div>
+
+                <div style="padding: 2rem;">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Profile Photo -->
+                        <div style="text-align: center; margin-bottom: 2rem;">
+                            <div
+                                style="width: 120px; height: 120px; background: var(--primary-50); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: var(--primary-600); font-size: 3rem;">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <input type="file" name="profile_picture" id="profile_picture" style="display: none;">
+                            <label for="profile_picture" class="btn btn-outline btn-sm">
+                                <i class="fas fa-camera"></i> Change Photo
+                            </label>
+                        </div>
+
+                        <div class="grid grid-2" style="gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="full_name">Full Name</label>
+                                <input type="text" name="full_name" id="full_name" class="form-input"
+                                    value="{{ request.user.doctor_profile.full_name }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="phone">Phone</label>
+                                <input type="tel" name="phone" id="phone" class="form-input"
+                                    value="{{ request.user.doctor_profile.phone }}">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-2" style="gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="specialization">Specialization</label>
+                                <select name="specialization" id="specialization" class="form-input">
+                                    <option value="general">General Medicine</option>
+                                    <option value="pediatrics">Pediatrics</option>
+                                    <option value="gynecology">Gynecology</option>
+                                    <option value="cardiology">Cardiology</option>
+                                    <option value="dermatology">Dermatology</option>
+                                    <option value="orthopedics">Orthopedics</option>
+                                    <option value="neurology">Neurology</option>
+                                    <option value="psychiatry">Psychiatry</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="consultation_fee">Consultation Fee (₹)</label>
+                                <input type="number" name="consultation_fee" id="consultation_fee" class="form-input"
+                                    value="{{ request.user.doctor_profile.consultation_fee }}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="qualification">Qualifications</label>
+                            <input type="text" name="qualification" id="qualification" class="form-input"
+                                value="{{ request.user.doctor_profile.qualification }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="bio">Bio</label>
+                            <textarea name="bio" id="bio" class="form-input" rows="4"
+                                placeholder="Tell patients about yourself...">{{ request.user.doctor_profile.bio }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-group">
+                                <input type="checkbox" name="is_available" id="is_available">
+                                <span>Available for consultations</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-full">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set current specialization as selected
+    var spec = "{{ request.user.doctor_profile.specialization|escapejs }}";
+    var specOption = document.querySelector('select[name="specialization"] option[value="' + spec + '"]');
+    if (specOption) specOption.selected = true;
+
+    // Set checkbox state
+    {% if request.user.doctor_profile.is_available %}
+    document.getElementById('is_available').checked = true;
+    {% endif %}
+</script>
+{% endblock %}

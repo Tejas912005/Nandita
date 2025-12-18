@@ -151,7 +151,6 @@ def user_login(request):
         
         if user is not None:
             login(request, user)
-            messages.success(request, f'Welcome back, {user.username}!')
             return redirect('dashboard')
         else:
             messages.error(request, 'Invalid username or password.')
@@ -488,6 +487,39 @@ def doctor_consultation(request, appointment_id):
         'chat_messages': chat_messages,
     }
     return render(request, 'doctor/consultation.html', context)
+
+
+@login_required
+def end_consultation(request, appointment_id):
+    """End consultation and mark as completed"""
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    
+    # Verify user is either the doctor or patient
+    is_doctor = hasattr(request.user, 'doctor_profile') and appointment.doctor == request.user.doctor_profile
+    is_patient = hasattr(request.user, 'patient_profile') and appointment.patient == request.user.patient_profile
+    
+    if not (is_doctor or is_patient):
+        messages.error(request, 'Access denied.')
+        return redirect('home')
+    
+    # Mark appointment as completed
+    appointment.status = 'completed'
+    appointment.save()
+    
+    # Update consultation end time
+    try:
+        consultation = appointment.consultation
+        consultation.ended_at = timezone.now()
+        consultation.save()
+    except:
+        pass
+    
+    messages.success(request, 'Consultation ended successfully.')
+    
+    if is_doctor:
+        return redirect('doctor_appointments')
+    else:
+        return redirect('patient_appointments')
 
 
 # ==================== HOSPITAL & LOCATION VIEWS ====================

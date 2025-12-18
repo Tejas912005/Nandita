@@ -140,8 +140,7 @@
                             </div>
                             <div>
                                 <div style="font-weight: 600;">Dr. {{ appointment.doctor.full_name }}</div>
-                                <div class="text-muted" style="font-size: 0.875rem;">{{
-                                    appointment.doctor.get_specialization_display }}</div>
+                                <div class="text-muted" style="font-size: 0.875rem;">{{ appointment.doctor.get_specialization_display }}</div>
                             </div>
                         </div>
                         <div style="text-align: right;">
@@ -178,8 +177,7 @@
                         </div>
                         <div style="flex: 1;">
                             <div style="font-weight: 500;">{{ notification.title }}</div>
-                            <div class="text-muted" style="font-size: 0.875rem;">{{
-                                notification.message|truncatewords:15 }}</div>
+                            <div class="text-muted" style="font-size: 0.875rem;">{{ notification.message|truncatewords:15 }}</div>
                         </div>
                     </div>
                     {% endfor %}

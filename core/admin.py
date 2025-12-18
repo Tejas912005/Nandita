@@ -8,6 +8,10 @@ from .models import (
     ChatMessage, Notification, MobileClinic
 )
 
+# Customize Admin Site Branding
+admin.site.site_header = "TeleMed Administration"
+admin.site.site_title = "TeleMed Admin Portal"
+admin.site.index_title = "Welcome to TeleMed Admin Panel"
 
 @admin.register(PatientProfile)
 class PatientProfileAdmin(admin.ModelAdmin):

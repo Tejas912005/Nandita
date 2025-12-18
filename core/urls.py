@@ -36,6 +36,7 @@ urlpatterns = [
     path('doctor/appointment/<int:appointment_id>/update/', views.update_appointment_status, name='update_appointment_status'),
     path('doctor/appointment/<int:appointment_id>/prescription/', views.create_prescription, name='create_prescription'),
     path('doctor/consultation/<int:appointment_id>/', views.doctor_consultation, name='doctor_consultation'),
+    path('consultation/<int:appointment_id>/end/', views.end_consultation, name='end_consultation'),
     
     # Hospital & Location
     path('find-hospitals/', views.find_hospitals, name='find_hospitals'),
