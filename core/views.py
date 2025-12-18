@@ -145,22 +145,18 @@ def user_login(request):
         return redirect('dashboard')
     
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            
-            if user is not None:
-                login(request, user)
-                messages.success(request, f'Welcome back, {user.username}!')
-                return redirect('dashboard')
-            else:
-                messages.error(request, 'Invalid username or password.')
-    else:
-        form = LoginForm()
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, f'Welcome back, {user.username}!')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'Invalid username or password.')
     
-    return render(request, 'auth/login.html', {'form': form})
+    return render(request, 'auth/login.html')
 
 
 def user_logout(request):
